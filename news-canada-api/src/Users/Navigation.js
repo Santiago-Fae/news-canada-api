@@ -18,7 +18,7 @@ const Navigation = () => {
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <h1 className="text-xl font-bold text-gray-900">
-                User System
+                News Project
               </h1>
             </div>
           </div>
