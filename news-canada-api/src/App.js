@@ -1,28 +1,30 @@
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { UserProvider, Login, Register, Profile, ProtectedRoute, Navigation } from './Users';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <div className="bg-red-500 text-white p-10 text-2xl">
-      Tailwind CSS 動いてるで！
-    </div>
-    <div className="bg-green-500 text-white text-2xl p-4">Tailwind OKやで！</div>
-    </div>
+    <UserProvider>
+      <Router>
+        <div className="App">
+          <Navigation />
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } 
+            />
+          </Routes>
+        </div>
+      </Router>
+    </UserProvider>
   );
 }
 
