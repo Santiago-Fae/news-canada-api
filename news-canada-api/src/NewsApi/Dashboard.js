@@ -13,8 +13,7 @@ export default function Dashboard() {
     const [open, setOpen] = useState(true)
 
   useEffect(() => {
-    axios.get('https://newsapi.org/v2/top-headlines?apiKey=6bd413768f134cf08a204183534723ea&country=us')
-    // axios.get('./news.json')
+    axios.get('./news.json')
     .then((result) => {
       setNewsData(result.data.articles);
       setLoad(false);
