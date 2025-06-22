@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { UserProvider, Login, Register, Profile, ProtectedRoute, Navigation } from './Users';
+import Dashboard from './NewsApi/Dashboard';
 import './App.css';
 
 function App() {
@@ -21,6 +22,9 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            {/* -----K added----- */}
+            <Route path="/dashboard" element={<Dashboard />} />
+
           </Routes>
         </div>
       </Router>
