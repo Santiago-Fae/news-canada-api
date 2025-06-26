@@ -17,16 +17,17 @@ const Navigation = () => {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">
-                News Project
-              </h1>
+              <Link
+                to="/dashboard"
+                className="text-xl font-bold text-gray-900"
+              >News Project</Link>
             </div>
           </div>
           
           <div className="flex items-center">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-                <span className="text-gray-700">
+                <span className="text-gray-700 hidden sm:block">
                   Hello, {currentUser?.name}
                 </span>
                 <Link
@@ -35,6 +36,10 @@ const Navigation = () => {
                 >
                   Profile
                 </Link>
+                <Link
+                to="/dashboard"
+                className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium hidden sm:block"
+              >News Project</Link>
                 <button
                   onClick={logout}
                   className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"

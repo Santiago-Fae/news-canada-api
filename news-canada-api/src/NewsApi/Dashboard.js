@@ -1,33 +1,40 @@
-import { useEffect, useState } from "react"
-import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { NewsContext } from './NewsContext';
 
 // for error handling tailwind library
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import Article from "./Article";
+import ClassArticle from "./ClassArticle";
+import ClassSpecialArticle from "./ClassSpecialArticle";
+
 
 export default function Dashboard() {
-  const [newsData, setNewsData] = useState([]);
-  const [load, setLoad] = useState(true);
-  const [err, setErr] = useState('');
-
-    const [open, setOpen] = useState(true)
+  const { newsData, load, err, open, setOpen, category, setCategory, getNews } = useContext(NewsContext)
 
   useEffect(() => {
-    axios.get('./news.json')
-    .then((result) => {
-      setNewsData(result.data.articles);
-      setLoad(false);
-      console.log(result.data);
-    })
-    .catch((error) => {
-      console.log(error);
-      setLoad(false)
-      setErr(error);
-    })
-  }, []);
+    getNews(category); //NewsContext.js
+  }, [category]);
   return(
     <>
-      {/* <h1>Dashboard</h1> */}
+      Select Category
+      <form className="max-w-sm mx-auto">
+        <select value={category} 
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          onChange={(e) => setCategory(e.target.value)}
+          >
+          <option value="business">Business</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="general">general</option>
+          <option value="health">health</option>
+          <option value="science">science</option>
+          <option value="sports">sports</option>
+          <option value="technology">technology</option>
+        </select>
+      </form>
+
+      {/* News Articles List */}
       <div className="flex justify-center m-4 p-6">
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
         {load && <p>Loading...</p>}
@@ -79,29 +86,38 @@ export default function Dashboard() {
           </>
         )}
         {!load && newsData.length > 0 && (
-          newsData.map((article, index) => (
-          <div key={index} className="max-w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-            <a href={article.url} target="_blank" rel="noopener noreferrer"> {/* open link with a new tab */}
-              <img 
-                className="rounded-t-lg" 
-                src={article.urlToImage ? article.urlToImage : 'https://dummyimage.com/600x400/808080/fff&text=No Image'} 
-                alt={article.title || "News image"} />
-            </a>
-            <div className="p-5">
-              <a href={article.url} target="_blank" rel="noopener noreferrer">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{article.title}</h5>
-              </a>
-              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{article.description}</p>
-              <a href={article.url} target="_blank" rel="noopener noreferrer" 
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                  Read more
-                  <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                  </svg>
-              </a>
-            </div>
-          </div>
-          ))
+          newsData.map((article, index) => {
+            var newArticle
+            if(article.urlToImage){
+              newArticle = new ClassArticle(article);
+            }else{
+              newArticle = new ClassSpecialArticle(article);
+            }
+            
+            return newArticle.display(index);
+          // return (
+          // <div key={index} className="max-w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+          //   <img 
+          //     className="rounded-t-lg" 
+          //     src={newArticle.urlToImage ? newArticle.urlToImage : 'https://dummyimage.com/600x400/808080/fff&text=No Image'} 
+          //     alt={newArticle.title || "News image"} />
+          //   <div className="p-5">
+          //     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{newArticle.title}</h5>
+          //     <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{newArticle.description}</p>
+          //     <Link 
+          //       to={`/dashboard/${btoa(newArticle.url)}`}
+          //       className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          //     > {/* (URL → Base64URL) */}
+          //       Read more
+          //       <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+          //         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+          //       </svg>
+          //     </Link> 
+          //   </div>
+          // </div>
+          // )
+        }
+        )
         )}
         </div>
       </div>
