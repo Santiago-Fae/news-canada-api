@@ -4,6 +4,7 @@ import { UserProvider, Login, Register, Profile, ProtectedRoute, Navigation } fr
 import NewsProvider from './NewsApi/NewsContext';
 import Dashboard from './NewsApi/Dashboard';
 import Article from './NewsApi/Article';
+import Home from './NewsApi/Home';
 import './App.css';
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
           <div className="App">
             <Navigation />
             <Routes>
-              <Route path="/" element={<Navigate to="/login" replace />} />
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route 
